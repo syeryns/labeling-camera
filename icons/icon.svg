@@ -1,7 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#2a2a2c"/>
-  <rect x="96" y="160" width="320" height="232" rx="40" fill="none" stroke="#f2f2f2" stroke-width="28"/>
-  <path d="M196 160l20-40h80l20 40" fill="none" stroke="#f2f2f2" stroke-width="28" stroke-linejoin="round"/>
-  <circle cx="256" cy="276" r="64" fill="none" stroke="#f2f2f2" stroke-width="28"/>
-  <rect x="124" y="188" width="92" height="40" rx="10" fill="#ff9f0a"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#2a2a2c"/>
+
+  <!-- 라벨 태그 -->
+  <g transform="translate(-24 18) rotate(-12 230 340)">
+    <path d="M150 268h220a22 22 0 0 1 22 22v100a22 22 0 0 1-22 22H150l-66-72z" fill="#ff9f0a"/>
+    <circle cx="140" cy="340" r="15" fill="#2a2a2c"/>
+    <rect x="182" y="310" width="160" height="22" rx="11" fill="#1c1c1e" opacity="0.45"/>
+    <rect x="182" y="350" width="110" height="22" rx="11" fill="#1c1c1e" opacity="0.45"/>
+  </g>
+
+  <!-- 라벨을 누르는 손 (검지 끝이 태그 오른쪽 위) -->
+  <g transform="translate(300 300) rotate(35) scale(0.62)" stroke="#2a2a2c" stroke-width="14" stroke-linejoin="round">
+    <rect x="-34" y="-420" width="174" height="84" rx="16" fill="#0a84ff"/>
+    <rect x="-80" y="-300" width="56" height="128" rx="28" fill="#f5f5f7" transform="rotate(-20 -52 -300)"/>
+    <rect x="-38" y="-352" width="176" height="176" rx="56" fill="#f5f5f7"/>
+    <rect x="96" y="-226" width="46" height="74" rx="23" fill="#f5f5f7"/>
+    <rect x="58" y="-214" width="50" height="88" rx="25" fill="#f5f5f7"/>
+    <rect x="18" y="-206" width="52" height="96" rx="26" fill="#f5f5f7"/>
+    <rect x="-30" y="-214" width="58" height="214" rx="29" fill="#f5f5f7"/>
+  </g>
 </svg>

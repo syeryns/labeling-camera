@@ -1,6 +1,6 @@
 // 앱 셸을 캐시해 오프라인에서도 열리게 한다.
 // 파일을 고친 뒤 배포할 때는 VERSION을 올리면 새 캐시로 교체된다.
-const VERSION = 'labelcam-v1';
+const VERSION = 'labelcam-v2';
 const ASSETS = [
   './',
   'index.html',
