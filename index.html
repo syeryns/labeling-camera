@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="라벨카메라">
+<meta name="theme-color" content="#1c1c1e">
+<meta name="format-detection" content="telephone=no">
+<title>라벨링 카메라</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- 1. 덱 목록 -->
+<section id="screen-decks" class="screen" hidden>
+  <header class="topbar">
+    <div class="topbar-side"></div>
+    <h1 class="topbar-title">덱</h1>
+    <div class="topbar-side right">
+      <button class="icon-btn" data-action="settings" aria-label="설정"></button>
+    </div>
+  </header>
+  <main class="scroll" id="deck-list"></main>
+  <footer class="bottombar">
+    <button class="btn" data-action="import-deck">가져오기</button>
+    <button class="btn primary" data-action="new-deck">새 덱</button>
+  </footer>
+</section>
+
+<!-- 2. 덱 상세 -->
+<section id="screen-detail" class="screen" hidden>
+  <header class="topbar">
+    <div class="topbar-side">
+      <button class="icon-btn" data-action="back-decks" aria-label="덱 목록"></button>
+    </div>
+    <h1 class="topbar-title" id="detail-title"></h1>
+    <div class="topbar-side right">
+      <button class="text-btn" data-action="toggle-edit" id="edit-toggle">편집</button>
+      <button class="icon-btn" data-action="detail-menu" aria-label="더보기"></button>
+    </div>
+  </header>
+  <div class="detail-head">
+    <div class="progress"><div class="progress-fill" id="detail-progress"></div></div>
+    <div class="detail-meta">
+      <span id="detail-count"></span>
+      <button class="chip" data-action="toggle-filter" id="filter-chip" aria-pressed="false">미촬영만 보기</button>
+    </div>
+  </div>
+  <main class="scroll" id="item-list"></main>
+  <footer class="bottombar" id="detail-bar"></footer>
+</section>
+
+<!-- 3. 편집 -->
+<section id="screen-editor" class="screen editor" hidden>
+  <header class="topbar editor-top">
+    <div class="topbar-side">
+      <button class="icon-btn" data-action="editor-back" aria-label="목록으로"></button>
+    </div>
+    <div class="editor-title">
+      <div class="editor-count" id="editor-count"></div>
+      <div class="editor-label" id="editor-label"></div>
+    </div>
+    <div class="topbar-side right">
+      <button class="icon-btn" data-action="editor-menu" aria-label="더보기"></button>
+    </div>
+  </header>
+  <div class="photo-tabs" id="photo-tabs"></div>
+  <div class="toolbar" id="toolbar"></div>
+  <div class="tool-options" id="tool-options"></div>
+  <div class="stage" id="stage">
+    <canvas id="photo-canvas"></canvas>
+    <canvas id="shape-canvas"></canvas>
+    <button class="fit-btn" id="fit-btn" data-action="fit" hidden>맞춤</button>
+  </div>
+  <footer class="bottombar editor-bar">
+    <button class="btn icon-only" data-action="undo" id="undo-btn" aria-label="실행취소"></button>
+    <button class="btn icon-only" data-action="redo" id="redo-btn" aria-label="다시실행"></button>
+    <button class="btn" data-action="retake">재촬영</button>
+    <button class="btn primary" data-action="editor-done">완료</button>
+  </footer>
+</section>
+
+<!-- 4. 내보내기 -->
+<section id="screen-export" class="screen" hidden>
+  <header class="topbar">
+    <div class="topbar-side">
+      <button class="icon-btn" data-action="export-back" aria-label="뒤로"></button>
+    </div>
+    <h1 class="topbar-title">내보내기</h1>
+    <div class="topbar-side right"></div>
+  </header>
+  <main class="scroll" id="export-body"></main>
+  <footer class="bottombar">
+    <button class="btn" data-action="export-share">공유</button>
+    <button class="btn primary" data-action="export-save">저장</button>
+  </footer>
+</section>
+
+<!-- 숨겨진 파일 입력: iOS에서 click()이 먹도록 display:none 대신 화면 밖에 둔다 -->
+<input type="file" id="cam-input" class="offscreen" accept="image/*" capture="environment">
+<input type="file" id="album-input" class="offscreen" accept="image/*" multiple>
+<input type="file" id="deck-file-input" class="offscreen" accept=".txt,.csv,.json,text/plain,text/csv,application/json">
+
+<div id="modal-root"></div>
+<div id="busy" hidden><div class="busy-box"><div class="spinner"></div><div id="busy-text"></div></div></div>
+<div id="toast" role="status"></div>
+
+<script src="vendor/jszip.min.js"></script>
+<script>window.JSZip || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"><\/script>');</script>
+<script src="app.js"></script>
+</body>
+</html>

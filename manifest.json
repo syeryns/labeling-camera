@@ -1,0 +1,17 @@
+{
+  "name": "라벨링 카메라",
+  "short_name": "라벨카메라",
+  "description": "라벨 목록을 순서대로 넘기며 촬영하고, 라벨을 얹어 폴더로 내보내는 카메라 앱",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1c1c1e",
+  "theme_color": "#1c1c1e",
+  "icons": [
+    { "src": "icons/icon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
