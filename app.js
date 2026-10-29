@@ -871,9 +871,66 @@ function renderDetail() {
         el('button', { class: 'btn primary', text: '완료', onclick: toggleEdit }),
       ]
     : [
+        el('button', { class: 'btn', text: '사진 올리기', onclick: uploadSheet }),
         el('button', { class: 'btn primary', html: icon('camera') + '다음 촬영', onclick: shootNext }),
-        el('button', { class: 'btn', html: icon('download') + '전체 저장', onclick: () => openExport() }),
+        el('button', { class: 'btn', text: '전체 저장', onclick: () => openExport() }),
       ]));
+  bar.classList.toggle('three', !S.editMode);
+}
+
+// 이미 찍어 둔 사진을 사진 보관함에서 올린다
+function uploadSheet() {
+  const deck = S.deck;
+  const sel = deck.items.find((i) => i.id === S.selectedItemId) || nextEmpty(deck) || deck.items[0];
+  if (!sel) { toast('라벨이 없습니다'); return; }
+  const num = deck.items.indexOf(sel) + 1;
+  actionSheet('사진 보관함에서 올리기', [
+    { label: '여러 장을 순서대로 배정', icon: 'image', run: () => startAlbum({ mode: 'bulk', itemId: sel.id }) },
+    { label: `${num}번 ‘${sel.label}’에 올리기`, icon: 'tag', run: () => startAlbum({ mode: 'add', itemId: sel.id }) },
+  ]);
+}
+
+// 고른 사진을 시작 라벨부터 미촬영 라벨에 한 장씩, 고른 순서대로 붙인다
+async function bulkAssign(files, start) {
+  const deck = S.deck;
+  const from = deck.items.indexOf(start);
+  const targets = deck.items.slice(from).filter((i) => i.status === 'empty' && !i.skipped).slice(0, files.length);
+  if (!targets.length) { toast('이 라벨부터는 남은 미촬영 라벨이 없습니다'); return; }
+  const extra = files.length - targets.length;
+  const first = targets[0], last = targets[targets.length - 1];
+  const range = targets.length > 1
+    ? `${deck.items.indexOf(first) + 1}번 ‘${first.label}’부터 ${deck.items.indexOf(last) + 1}번 ‘${last.label}’까지`
+    : `${deck.items.indexOf(first) + 1}번 ‘${first.label}’에`;
+  const ok = await confirmDialog(`사진 ${targets.length}장을 ${range} 고른 순서대로 붙일까요?`, {
+    sub: '이미 찍은 라벨과 건너뛴 라벨은 넘어갑니다.' + (extra > 0 ? `\n남는 ${extra}장은 올리지 않습니다.` : ''),
+    ok: '올리기',
+  });
+  if (!ok) return;
+  let done = 0;
+  try {
+    for (let i = 0; i < targets.length; i++) {
+      busy(`사진 올리는 중… ${i + 1}/${targets.length}`);
+      const it = targets[i];
+      const { meta, ops } = await preparePhoto(files[i], it.id);
+      it.photoIds.push(meta.id);
+      it.status = 'shot';
+      try {
+        await DB.write([...ops, deckOps(deck)]);
+      } catch (e) {
+        it.photoIds.pop();
+        it.status = 'empty';
+        throw e;
+      }
+      done++;
+    }
+  } catch (e) {
+    handleError(e);
+  } finally {
+    busy(false);
+    S.selectedItemId = (nextEmpty(deck, targets[Math.max(0, done - 1)]) || {}).id || null;
+    if (S.screen === 'detail') renderDetail();
+    if (done) toast(`사진 ${done}장을 올렸습니다`);
+  }
 }
 
 function itemRow(it, idx) {
@@ -1112,6 +1169,7 @@ async function handleFiles(files) {
   const deck = S.deck;
   const item = deck.items.find((i) => i.id === ctx.itemId);
   if (!item) return;
+  if (ctx.mode === 'bulk') return bulkAssign(files, item);
   try {
     if (ctx.mode === 'retake') {
       const meta = await DB.get('photos', ctx.photoId);

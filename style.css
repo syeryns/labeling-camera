@@ -93,6 +93,9 @@ svg { display: block; }
 }
 .bottombar > .btn { flex: 1 1 0; }
 .bottombar > .btn.icon-only { flex: 0 0 52px; }
+.bottombar.three { gap: 8px; }
+.bottombar.three > .btn { padding: 0 6px; font-size: 15px; white-space: nowrap; }
+.bottombar.three > .btn.primary { flex-grow: 1.3; }
 
 /* ---------- 버튼 ---------- */
 .btn {
